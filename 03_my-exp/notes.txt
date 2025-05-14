@@ -65,7 +65,7 @@
  -> later HTML elemnts started to appear in JS (via DOM API) etc ..
  -> React's JSX de-mistified the separarions - i.e. JS and HTML - UI and logic are now coded together
 
--> React has a different separtion of concerns - "Different UI have a different components "
+-> React has a different separtion of concerns - "Different UI have different components "
     - earlier people were not used to it as it was a completely different paradigm.
     - now peoplw got used to it
 

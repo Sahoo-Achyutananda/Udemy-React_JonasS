@@ -1,0 +1,6 @@
+controlled elements - 
+
+-> we try not to use the DOM directly in REACT to get values from forms and append it somewhere (in TODO Apps)
+-> instead we use states to get values from elements(here - form inputs)
+
+
