@@ -1,0 +1,50 @@
+// useReducer hook - a complex hook in REACT
+
+-> similar to useState hook | alternative to the useState hook !
+-> If you find yourself keeping track of multiple pieces of state that rely on complex logic, useReducer may be useful.
+-> takes two arguments
+
+useReducer(<reducerFunction>, <initialState>) : returns current state and a dispatch method !
+reducerFunction : contains a custom state logic
+initialState : ususally an Object with multiple key value pairs
+
+🔴🔴 A simple Code - 
+
+import "./styles.css";
+import { useReducer } from "react";
+
+export default function App() {
+  return (
+    <div className="App">
+      <Counter />
+    </div>
+  );
+}
+
+function Counter() {
+  function counterReducer(state, action) {
+    switch (action.type) {
+      case "INCREMENT":
+        return { count: state.count + 1 };
+      case "DECREMENT":
+        return { count: state.count - 1 };
+      default:
+        return state;
+    }
+  }
+  const [state, dispatch] = useReducer(counterReducer, { count: 0 });
+  // 🔴counterReducer is like the HOD of an dept, it receives requests from certain Profus and it performs an action - updating the state
+  // 🔴how does it know when to perform the actions ?? -> the dispatch function informs it ....
+  // 🔴countReducer is Lord Vishnu and dispatch is NaradMuni - Narad reports an action to VishuJi and VishnuJi takes respective actions
+
+  return (
+    <div>
+      <p>Count : {state.count}</p>
+      <button onClick={() => dispatch({ type: "INCREMENT" })}>Increment</button>
+      <button onClick={() => dispatch({ type: "DECREMENT" })}>Decrement</button>
+    </div>
+  );
+}
+
+Visit this Link - 
+https://codesandbox.io/p/sandbox/58m5kq?file=%2Fsrc%2FApp.js%3A36%2C1

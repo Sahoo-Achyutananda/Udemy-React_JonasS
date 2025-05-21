@@ -1,0 +1,193 @@
+useEffect HOOK - 
+-> it allows us to run a piece of code at different durations in the component lifecycle
+
+component lifecycle : MOUNT -> RE RENDERING -> UNMOUNT
+
+Component Lifecycle Phases
+1. Mounting (when the component is first added to the DOM)
+
+    useEffect(() => { ... }, [])
+
+        Runs once after the component is mounted.
+
+        Good for: API calls, subscriptions, event listeners.
+
+2. Updating (when props/state change)
+
+    useEffect(() => { ... }, [someStateOrProp])
+
+        Runs every time the dependency changes.
+
+        Good for: reacting to state or prop changes.
+
+3. Unmounting (when the component is removed from the DOM)
+
+    Cleanup function inside useEffect:
+    useEffect(() => {
+        // Setup
+        return () => {
+            // Cleanup (e.g., remove listeners, cancel timers)
+        };
+    }, []);
+
+Side effect in react - 
+
+side effect is basically any type of interaction between react component
+and the outside world of the component.
+-> it is a piece of code that does something, duhhh ...
+eg : data fetching, setting up timers, manually accessing the DOM etc ..
+
+-> it should not in the render logic
+-> it can be present within event handlers (onClick, onSubmit etc..)
+-> it can also be present within effects(useEffect)
+
+
+
+wrong ways to use fetch() -
+
+// wrong way to do it - it fires infinite netwrok requests
+  // fetch(omdbURL)
+  //   .then((res) => {
+  //     return res.json();
+  //   })
+  //   .then((data) => {
+  //     console.log(data);
+  //     setMovies(data.Search);
+  //   });
+
+  // semi correct  way - always use Async and await
+
+  // useEffect(function () {
+  //   fetch(omdbURL)
+  //     .then((res) => {
+  //       return res.json();
+  //     })
+  //     .then((data) => {
+  //       setMovies(data.Search);
+  //     });
+  // }, []);
+
+
+  q) when are effects actually executed ??
+  -> mount(initial render) -> commit -> browser paints the screen --> EFFECT -> UNMOUNT
+  -------------------process repeats -------------------------------------
+
+  q) sometimes - infact most of the times you have to clean up the effects - when a component is unmounted
+  eg - 
+
+  
+  const controller = new AbortController();
+
+  // The correct way -
+  useEffect(() => {
+    async function fetchMovies() {
+      try {
+        setIsLoading(true);
+        setError("");
+        setSelectedId("");
+
+        const response = await fetch(omdbURL, { signal: controller.signal });
+
+        if (!response.ok) {
+          throw new Error("Something went wrong with fetching movies !");
+        }
+        const data = await response.json();
+        setMovies(data.Search);
+        // console.log(data.Search);
+        setIsLoading(false);
+      } catch (err) {
+        // console.log(err.message);
+        if (err.name !== "AbortError") setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    if (query.length < 3) {
+      setMovies([]);
+      setError("");
+      return;
+    }
+    fetchMovies();
+    return function () {
+      controller.abort();
+    };
+  }, [query]);
+
+
+  🔴🔴🔴More on HOOKS - 
+  -> every hook in react is identified by their order number - the order they've been declared
+  -> every hook must be defined on the top of functions
+  -> React creates a linkedlist of hooks in the order they've been declared.
+    - if we use a hook inside an if condition, the linked list might break sometimes(based on the condition)
+
+-> When React renders your component, it:
+
+    Runs your function component from top to bottom.
+
+    Internally keeps a counter: “I’m now at hook #1, #2, #3…”
+
+    Associates each hook (e.g., useState, useEffect, etc.) with its position in the render tree.
+
+🧠 Imagine it like this:
+
+function MyComponent() {
+  const [count, setCount] = useState(0); // Hook #1
+  const [name, setName] = useState('');  // Hook #2
+  const [isVisible, setIsVisible] = useState(true); // Hook #3
+}
+
+Under the hood, React does something like:
+
+hookIndex = 0;
+hooks[hookIndex++] = useState(0); // hookIndex = 1
+hooks[hookIndex++] = useState(''); // hookIndex = 2
+hooks[hookIndex++] = useState(true); // hookIndex = 3
+
+So it says:
+
+    Hook #1 → count
+
+    Hook #2 → name
+
+    Hook #3 → isVisible
+
+🚨 Now what if you mess with the order?
+
+function MyComponent() {
+  if (someCondition) {
+    const [count, setCount] = useState(0); // ❌
+  }
+  const [name, setName] = useState('');
+}
+
+    On one render: useState(0) is called first.
+
+    On another render: it's skipped, and useState('') is now the first hook.
+
+This breaks React’s internal order → it gives wrong state to the wrong variable. You’ll see:
+
+    Wrong values
+
+    Effects not running
+
+    React errors like: Rendered fewer hooks than expected
+
+🔍 Think of Hooks like bookmarks in a notebook:
+
+If you keep removing or reordering bookmarks, React has no idea what page to flip to anymore — it mixes up your state.
+
+🔴🔴🔴 useRef vs normal variables vs useState
+
+power comparison : 
+
+"normal variables < useRef < useState"
+
+| Feature                             | `useState`                 | `useRef`                 | Normal Variable (`let`)          |
+| ----------------------------------- | -------------------------- | ------------------------ | -------------------------------- |
+| **Persists across renders**         | ✅ Yes                      | ✅ Yes                    | ❌ No                             |
+| **Triggers re-render when updated** | ✅ Yes                      | ❌ No                     | ❌ No                             |
+| **Mutable without re-render**       | ❌ No (triggers render)     | ✅ Yes                    | ✅ Yes (but resets every render)  |
+| **Access to DOM elements**          | ❌ No                       | ✅ Yes (via `.current`)   | ❌ No                             |
+| **Used for UI state**               | ✅ Yes                      | 🚫 Not recommended       | 🚫 Not recommended               |
+| **Execution Time**                  | During render + re-renders | During render + persists | Freshly re-declared every render |

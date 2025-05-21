@@ -1,0 +1,84 @@
+// strict mode is not ground breaking
+/*
+-> It's a tool for highlighting potential problems in your React app during development.
+-> It does not render any visible UI and has no effect in production — it's purely for development-time checks.
+-> <React.StrictMode> helps:
+
+    1. Detect unsafe lifecycle methods
+
+        Warns about deprecated methods like componentWillMount, componentWillReceiveProps, etc.
+
+    2. Warn about side effects in rendering
+
+        Identifies functions that have unintended effects inside render, useEffect, etc.
+
+    3. Detect accidental state mutations
+
+    4. 🔴🔴Double-invokes certain functions on purpose
+
+        This helps catch bugs in components that aren’t pure (i.e., they mutate state or props unexpectedly).
+
+*/
+
+/* 🧠 React Components – Like LEGO Blocks for Websites
+
+    🧱 A component is a block
+    Just like a LEGO piece builds part of a toy, a component builds part of a website or app.
+
+    🧰 It's made with code
+    We use JavaScript to make these blocks, and React helps us do it easily.
+
+    🖼️ Each component shows something on the screen
+    For example, a button, a picture, or a message like "Hello!"
+
+    🔁 We can reuse components
+    Like using the same LEGO piece in many places, we can use a component many times.
+
+    🗣️ Components can talk using “props”
+    Props are like little messages or values you give to the component (like a name or number).
+
+    🎛️ Some components can remember things
+    With something called state, they can count, switch colors, or remember what you clicked.
+
+    🧩 Many components make one big app
+    We connect small parts (components) to build the full website—just like building a whole LEGO castle!
+
+ */
+
+ /*
+ what is JSX ??
+
+ -> it is a declarative syntax to describe what components look like and how they work
+-> conmponents must return a block of JSX
+-> "BABEL" a JS compiler is used to convert modern JS to old style JS (eg: arrow function to normal function)
+   - it also converts JSX to React.createElement() functions that browsers understand
+
+-> browsers dont understand JSX, they only understand HTML. every JSX component is converted to React.createElement function call
+ 
+ 
+ */
+
+
+ /*
+ Separaytion of concerns - 
+ -> earlier HTML,CSS and JS was used to create website .. It separated the UI from the functionality
+ -> later HTML elemnts started to appear in JS (via DOM API) etc ..
+ -> React's JSX de-mistified the separarions - i.e. JS and HTML - UI and logic are now coded together
+
+-> React has a different separtion of concerns - "Different UI have different components "
+    - earlier people were not used to it as it was a completely different paradigm.
+    - now peoplw got used to it
+
+ */
+
+To use any JavaScript expression in JSX (like variables, function calls), wrap it in {}.
+❌ You can't put full statements like if, for, etc., directly inside JSX — only expressions.
+-> There's a difference bwtween JS expressions and statements
+-> Expression	Produces a value (can be used in JSX)
+-> Statement	Performs an action (like if, for)
+
+
+-> for rendering lists in react, we always need a key - something that is unique to each createElement
+    - you'll understand why it's needed later
+    
+ 
